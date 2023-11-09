@@ -1,0 +1,37 @@
+﻿@using System.Text.Json;
+@using EcPayMVC.ViewModels.EcPay;
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Check";
+    Layout = "_EcPayLayout";
+    var api = Model.ApiUrl;
+    var data = Model.EcPay;
+}
+
+<script>
+    const orderObj = @Html.Raw(JsonSerializer.Serialize(data));
+    function createForm(orderObj) {
+        const myForm = document.createElement('form');
+        myForm.action = '@api';
+        myForm.method = 'POST';
+
+        Object.keys(orderObj).forEach(key => {
+            const myInputItem = orderObj[key]
+            if (myInputItem) {
+                const myInput = document.createElement('input');
+                myInput.name = key;
+                myInput.value = myInputItem;
+                myInput.type = 'hidden'
+                myForm.append(myInput);
+            }
+        })
+        // const submitBtn = document.createElement('button');
+        // submitBtn.innerText = '提交';
+        // submitBtn.type = 'submit';
+        // myForm.append(submitBtn)
+        document.body.append(myForm);
+    }
+    createForm(orderObj);
+            document.querySelector('form').submit();
+</script>
+
